@@ -3,12 +3,12 @@
     "description": "Hightlight some pre defined text after page loads",
     "version": "0.1",
     "permissions": [
-    "tabs","<all_urls>"
+        "tabs",
+        "<all_urls>"
     ],
     "browser_action": {
         "default_popup": "popup.html"
     },
-
     "content_scripts": [
         {
         "matches": [
