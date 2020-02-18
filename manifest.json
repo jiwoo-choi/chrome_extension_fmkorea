@@ -1,0 +1,21 @@
+{
+    "name": "Highlight some phrases",
+    "description": "Hightlight some pre defined text after page loads",
+    "version": "0.1",
+    "permissions": [
+    "tabs","<all_urls>"
+    ],
+    "browser_action": {
+    },
+
+    "content_scripts": [
+        {
+        "matches": [
+            "https://www.fmkorea.com/*"
+            ],
+        "js": ["content.js"],
+        "run_at": "document_end"       
+        }
+    ], 
+    "manifest_version":2
+}
