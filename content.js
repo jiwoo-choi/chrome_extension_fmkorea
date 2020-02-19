@@ -1,14 +1,36 @@
-/**
- * @author Jiwoo, Choi
- * @brief HTML태그 중 게시글과 관련된 태그를 찾고 바꿔주는 스크립트.
- */
+async function updateKeywords() {
+	return new Promise(function(resolve){
+			chrome.storage.sync.get(['keyword'], function(result) {
+				let currentKeywords;
+				currentKeywords = result.keyword
+				currentKeywords = (currentKeywords == undefined) ? [] : currentKeywords; // avoid undefined case.
+				resolve(currentKeywords);
+			});		
+	})
+}
+
+async function removeTitles(keywordList) {
+	const titleTag = document.querySelectorAll("h3.title");
+	for(let element of titleTag) {
+		for(const keyword of keywordList) {
+			if(element.innerText.includes(keyword)) {
+				element.offsetParent.style.display = "none";
+			}
+		}
+	}
+}
 
 chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-  	const titleTag = document.querySelectorAll("h3.title");
-  	for(let element of titleTag) {
-  		if(element.innerText.includes(request.text)) {
-			element.offsetParent.style.display="none";
-  		}
-  	}
+	async function(request, sender, sendResponse) {
+		const keywordList = await updateKeywords();
+		await removeTitles(keywordList);
 });
+
+
+ async function viewDidLoad(){
+ 	const keywordList = await updateKeywords();
+	await removeTitles(keywordList);
+}
+viewDidLoad();
+
+//viewDidLoad();
