@@ -1,6 +1,5 @@
-
-//when loaded this should be called.
 function viewDidLoad(){
+
 	updateChipUI().then(keywordList => {
 		// stoarge 에 있던 데이터 삭제
 		sendKeyword(keywordList);

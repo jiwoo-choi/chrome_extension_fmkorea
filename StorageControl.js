@@ -1,5 +1,5 @@
-class StorageControl {
-    
+export default class StorageControl {
+
     constructor(keyword) {
         this.keyword = keyword
     }
@@ -14,7 +14,7 @@ class StorageControl {
             });
         })
     }
-
+    
     async saveKey(key) {
         return new Promise(async function(resolve) {
             if (key !== "") {
