@@ -26,6 +26,11 @@ chrome.runtime.onMessage.addListener(
 		await removeTitles(keywordList);
 });
 
+
+ async function viewDidLoad(){
+ 	const keywordList = await updateKeywords();
+	await removeTitles(keywordList);
+}
+viewDidLoad();
+
 //viewDidLoad();
-const keywordList = await updateKeywords();
-await removeTitles(keywordList);
