@@ -1,12 +1,12 @@
-export default class StorageControl {
-
+export default class StorageController {
     constructor(keyword) {
-        this.keyword = keyword
+        this.keyword = keyword;
     }
 
-    async getKeys() {
+    async getKeywordList() {
+        const self = this;
         return new Promise(function(resolve) {
-            chrome.storage.sync.get([this.keyword], function(result) {
+            chrome.storage.sync.get([self.keyword], function(result) {
                 let currentKeywords;
                 currentKeywords = result.keyword
                 currentKeywords = (currentKeywords == undefined) ? [] : currentKeywords; // avoid undefined case.
@@ -15,17 +15,15 @@ export default class StorageControl {
         })
     }
     
-    async saveKey(key) {
+    async saveKeyword(key) {
         return new Promise(async function(resolve) {
             if (key !== "") {
-                let currentKeywords = await getKeys()
-                currentKeywords.push(key)
-                dictTemp[this.keyword] = currentKeywords
-                chrome.storage.sync.set(dictTemp, function() { 
-                    resolve(true)
+                let currentKeywords = await this.getKeywordList();
+                currentKeywords.push(key);
+                chrome.storage.sync.set({"keyword": currentKeywords}, function() { 
+                    resolve(true);
                 });
             }
-        })
+        }.bind(this));
     }
 }
-
