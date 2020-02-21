@@ -11,7 +11,7 @@ function removeTitles(keywordList) {
 	}
 }
 
-export function main() { 
+export function contentMain() { 
 	const storageController =  new StorageController("keyword");
 
 	async function filterTitle() {
