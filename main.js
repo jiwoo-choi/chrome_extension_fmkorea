@@ -11,20 +11,21 @@ function removeTitles(keywordList) {
 	}
 }
 
-export function main() {
-	const storageController = new StorageController("keyword");
+export function main() { 
+	const storageController =  new StorageController("keyword");
 
 	async function filterTitle() {
-		storageController.getKeywordList().then(keywordList => {
-			removeTitles(keywordList);	
-		})
+		storageController.getKeywordList()
+		.then(keywordList => { removeTitles(keywordList) })
+		//.catch(reason => {}) //alert(reason);})
 	}
 
 	filterTitle();
 
 	chrome.runtime.onMessage.addListener(
 		async function(request, sender, sendResponse) {
-			filterTitle();
+			alert('abc');
+			await filterTitle();
 	});
 }
 

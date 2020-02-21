@@ -7,14 +7,9 @@ function viewDidLoad(){
 	const input = document.querySelector("#textArea");
 
 	sendButton.addEventListener("click", async function() {
-		stoargeController.saveKeyword(input.value).then(result => {
-			if(result == true) {
-				sendKeyword(input.value);
-			} else {
-				console.log("something wrong");
-			}
+		stoargeController.saveKeyword(input.value)
+		.then(result => { sendKeyword(result) })
 		});
-	});
 }
 
 function sendKeyword(keywordList) {
@@ -22,8 +17,6 @@ function sendKeyword(keywordList) {
 		chrome.tabs.sendMessage(tabs[0].id, {keyword: keywordList}); //
 	});
 }
-
-
 
 document.addEventListener("DOMContentLoaded", function() {
 	viewDidLoad()
