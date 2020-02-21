@@ -21,7 +21,7 @@ export default class StorageController {
         return new Promise(function(resolve, reject) {
             chrome.storage.sync.get([this.keyword], function(result) { // this will call-back any value.
                 let currentKeywords;
-                currentKeywords = result.keyword
+                currentKeywords = result.keyword;
                 currentKeywords = (currentKeywords == undefined) ? [] : currentKeywords; // avoid null.
                 if (!this.storageErrorChecker()){
                     resolve(currentKeywords) 
@@ -39,7 +39,8 @@ export default class StorageController {
             } else {
                 let currentKeywords = await this.getKeywordList();
                 currentKeywords.push(key);
-                chrome.storage.sync.set({"keyword": currentKeywords}, function() { 
+                tempDictionary[this.keyword] = currentKeywords;
+                chrome.storage.sync.set(tempDictionary, function() { 
                     if (!this.storageErrorChecker()) {
                         resolve(ERROR.SUCCESS);
                     } else {

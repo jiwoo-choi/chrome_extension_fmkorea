@@ -12,26 +12,26 @@ const addChip = (text) => {
 sendButton.addEventListener("click", () => {
 	addChip(input.value);
 	input.value = "";
-
+})
 
 function viewDidLoad(){
-
 	const stoargeController = new StorageController("keyword");
-
 	const sendButton = document.querySelector("#sendBtn");
 	const input = document.querySelector("#textArea");
-
 	sendButton.addEventListener("click", async function() {
 		stoargeController.saveKeyword(input.value)
-		.then(result => { sendKeyword(result) })
+			.then( result => { 
+				braodcastUpdateMessage() ;
+			})
 		});
 }
 
-function sendKeyword(keywordList) {
+function braodcastUpdateMessage() {
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 		 chrome.tabs.sendMessage(tabs[0].id, {text: input.value});
 	});
+}
 
 document.addEventListener("DOMContentLoaded", function() {
-	viewDidLoad()
-})
+	viewDidLoad();
+});
