@@ -4,19 +4,24 @@
     "version": "0.1",
     "permissions": [
         "tabs",
-        "<all_urls>"
+        "<all_urls>",
+        "storage"
     ],
     "browser_action": {
         "default_popup": "popup.html"
     },
     "content_scripts": [
         {
-        "matches": [
-            "https://www.fmkorea.com/*"
+            "matches": [
+                "https://www.fmkorea.com/*"
             ],
-        "js": ["content.js"],
-        "run_at": "document_end"       
+            "js": ["content.js"], 
+            "run_at": "document_end"       
         }
     ], 
+    "web_accessible_resources": [
+        "contentMain.js",
+        "StorageController.js"
+    ],
     "manifest_version":2
 }
