@@ -14,6 +14,14 @@ sendButton.addEventListener("click", () => {
 	input.value = "";
 
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-		 chrome.tabs.sendMessage(tabs[0].id, {text: input.value});
+		chrome.tabs.sendMessage(tabs[0].id, {keyword: keywordList}); //
 	});
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+	viewDidLoad()
 });
+
+
+
+
