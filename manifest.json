@@ -1,7 +1,6 @@
 {
-    "name": "Highlight some phrases",
-    "description": "Hightlight some pre defined text after page loads",
-    "version": "0.1",
+    "name": "fmkorea-filter",
+    "version": "0.5",
     "permissions": [
         "tabs",
         "<all_urls>",
@@ -15,12 +14,12 @@
             "matches": [
                 "https://www.fmkorea.com/*"
             ],
-            "js": ["content.js"], 
+            "js": ["Content.js"], 
             "run_at": "document_end"       
         }
     ], 
     "web_accessible_resources": [
-        "contentMain.js",
+        "ContentMain.js",
         "StorageController.js"
     ],
     "manifest_version":2
