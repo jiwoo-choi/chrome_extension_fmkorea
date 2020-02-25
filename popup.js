@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 636b6c0357dde4250ee0b4178c1e33bf6d22202e
+import StorageController from './StorageController.js';
+
 const sendButton = document.querySelector("#sendBtn");
 const input = document.querySelector("#textArea");
-
-
 
 const addChip = (text) => {
 	let tag = "<div class='md-chip'> <span>" + text + "</span> <button type='button' class='md-chip-remove'></button></div>"
@@ -16,36 +12,26 @@ const addChip = (text) => {
 sendButton.addEventListener("click", () => {
 	addChip(input.value);
 	input.value = "";
-
-<<<<<<< HEAD
-=======
-import StorageController from './StorageController.js';
+})
 
 function viewDidLoad(){
 	const stoargeController = new StorageController("keyword");
-
 	const sendButton = document.querySelector("#sendBtn");
 	const input = document.querySelector("#textArea");
-
 	sendButton.addEventListener("click", async function() {
 		stoargeController.saveKeyword(input.value)
-		.then(result => { sendKeyword(result) })
+			.then( result => { 
+				braodcastUpdateMessage() ;
+			})
 		});
 }
 
-function sendKeyword(keywordList) {
->>>>>>> 413df68ab62d5a41df8c0f0f2aed4873420332aa
-=======
->>>>>>> 636b6c0357dde4250ee0b4178c1e33bf6d22202e
+function braodcastUpdateMessage() {
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-		chrome.tabs.sendMessage(tabs[0].id, {keyword: keywordList}); //
+		 chrome.tabs.sendMessage(tabs[0].id, {text: input.value});
 	});
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-	viewDidLoad()
+	viewDidLoad();
 });
-
-
-
-
