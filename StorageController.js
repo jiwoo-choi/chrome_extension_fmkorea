@@ -4,6 +4,8 @@ const ERROR  = {
     STORAGE_FAIL: 'STORAGE FAIL',
 };
 
+
+
 export default class StorageController {
 
     constructor(keyword) {

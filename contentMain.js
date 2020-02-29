@@ -22,7 +22,6 @@ function removeTitles(keywordList) {
 
 export function contentMain() { 
 	const storageController =  new StorageController("keyword");
-
 	async function filterTitle() {
 		storageController.getKeywordList()
 		.then(keywordList => { removeTitles(keywordList) })

@@ -1,6 +1,6 @@
 import StorageController from './StorageController.js';
 
-const sendButton = document.querySelector("#sendBtn");
+const sendButton = document.querySelector(".button");
 const input = document.querySelector("#textArea");
 
 const addChip = (text) => {
@@ -10,6 +10,8 @@ const addChip = (text) => {
 }
 
 sendButton.addEventListener("click", () => {
+	alert('abc');
+
 	addChip(input.value);
 	input.value = "";
 })

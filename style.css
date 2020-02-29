@@ -1,4 +1,67 @@
 
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800');
+
+* {
+	font-family : 'Nanum Gothic';
+  color: #e0e0e0;
+}
+
+.big-text {
+  text-align : center;
+  padding: 10px 0;
+}
+
+.big-text.header {
+  font-size: 50px;
+  padding: 10px 0;
+}
+
+.big-text.content {
+  font-size: 20px;
+  padding: 10px 0;
+  color:red;
+}
+
+.chip_text {
+  font-size: 50px;
+  padding: 10px 0;
+}
+
+.container{
+  display:flex;
+  justify-content: center;
+  margin: 0 30px 30px 30px;
+  height:50px
+}
+
+.searchbar{
+  color: #e0e0e0;
+  align-items: center;
+  border-radius:10px; 
+  flex:0.8;
+  border:2px solid #FF0000;
+  margin-right: 10px;
+  border: 0px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: large;
+}
+
+
+
+.searchbar:hover {
+}
+
+
+.button{
+  border-radius: 2px;
+  background-color: black;
+  font-size: 20px;
+  border-radius:10px; 
+  flex:0.2;
+  border: 0px;
+}
+
 .md-chip {
   display: inline-block;
   background: #e0e0e0;
@@ -9,6 +72,7 @@
   margin-bottom: 10px;
   margin-top: 10px;
 }
+
 
 .md-chip-clickable {
   cursor: pointer;
@@ -71,10 +135,7 @@
 
 body{
   width:500px;
+  background-color: #3262c5;
 }
 
-.button12 {
-  border-radius: 2px;
-  background-color: #4CAF50
-}
 
