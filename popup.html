@@ -5,14 +5,29 @@
     <meta charset="UTF-8">
   </head>
   <body>
-    <h1 class="big-text header"> Keywords </h1>
-    <h3 class="big-text content"> 키워드를 입력해주세요 </h3>
-    <div class="container">
-      <input class="searchbar" id="textArea" type="text">
-      <button type="button" class="button" >ADD</button>
+    <h1 class="big-text-header"> KEYWORDS </h1>
+    <div class="searchbar-container">
+      <input class="searchbar-element" id="textArea" type="text" placeholder="키워드를 입력해주세요">
+      <button type="button" class="button-element">ADD</button>
     </div>
-    <script src="popup.js"></script>
-    <div id="chipArea"> </div>
+
+    <script type="module" src="popup.js"></script>
+
+    <div class="flex-container wrap" id="chipArea">
+    <!--
+       <div class="chip-container"> 
+        <div> abcd </div> 
+        <div class="chip-container-x">✘</div> 
+      </div> 
+      <div class="chip-container"> 
+        <div> abcd </div> 
+        <div class="chip-container-x">✘</div> 
+      </div> 
+    -->
+    </div>
+
+
+  
   </body>
 </html>
 

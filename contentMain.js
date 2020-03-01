@@ -3,7 +3,6 @@ import StorageController from './StorageController.js';
 
 function removeTitles(keywordList) {
 
-	alert(keywordList);
 	const titleTag = document.querySelectorAll("h3.title");
 
 	for(let element of titleTag) {
@@ -24,7 +23,9 @@ export function contentMain() {
 	const storageController =  new StorageController("keyword");
 	async function filterTitle() {
 		storageController.getKeywordList()
-		.then(keywordList => { removeTitles(keywordList) })
+			.then(keywordList => { 
+				removeTitles(keywordList)
+			})
 		//.catch(reason => {}) //alert(reason);})
 	}
 
