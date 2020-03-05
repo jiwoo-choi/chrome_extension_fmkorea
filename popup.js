@@ -31,27 +31,21 @@ async function viewDidLoad(){
 
 	updateChip(savedKeyword);
 
+	//remove => restore?
 	sendButton.addEventListener("click", async () => {
-		await stoargeController.saveKeywordFor(input.value);
+		await stoargeController.saveKeywordFor(input.value)
 		const newSavedKeyword = await stoargeController.getKeywordList();
 		updateChip(newSavedKeyword);
+		braodcastUpdateMessage() ;
 		input.value = "";
 	})
-	/*
-	sendButton.addEventListener("click", async () => {
-		addChip(input.value);
-		input.value = "";
-
-		await stoargeController.saveKeyword(input.value)
-			.then( result => { 
-				braodcastUpdateMessage() ;
-			})
-	})*/
+	
+	//if it is background.. but it is still..
 }
 
 function braodcastUpdateMessage() {
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-		 chrome.tabs.sendMessage(tabs[0].id, {text: input.value});
+		 chrome.tabs.sendMessage(tabs[0].id, {text: ""});
 	});
 }
 

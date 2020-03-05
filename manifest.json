@@ -18,6 +18,12 @@
             "run_at": "document_end"       
         }
     ], 
+
+    "background" : {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    
     "web_accessible_resources": [
         "contentMain.js",
         "StorageController.js"
