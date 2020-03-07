@@ -70,29 +70,28 @@
 }
 
 .chip-container {
-  display:flex;
-  flex-direction: row;
-  background-color:white	;
-  padding:8px;
+  display: inline-block;
+  background-color: white;
+  padding: 10px;
   margin-right: 10px;
   margin-bottom: 10px;
-  justify-content: right;
-  align-items: center;
-  border-radius:20px;
+  border-radius: 20px;
+}
+
+.chip-container > span {
+  margin: 4px;
 }
 
 .chip-container-x{
-  display:flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius:10px;
   background-color: #C0C0C0;
   width:20px;
   height:20px;
-  margin-left: 5px;
   color:white;
   font-size: 10px;
-
 }
 
 .chip-container:hover {
@@ -103,6 +102,16 @@
 
 .chip-container-x:hover{
   background-color: #D3D3D3	;
+}
+
+ul {
+  list-style: none;
+  padding-inline-start: 0px;
+  margin-left: 30px;
+}
+
+li {
+  display: inline-block;
 }
 
 body{

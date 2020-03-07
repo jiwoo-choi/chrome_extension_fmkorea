@@ -11,23 +11,23 @@
       <button type="button" class="button-element">ADD</button>
     </div>
 
-    <script type="module" src="popup.js"></script>
-
-    <div class="flex-container wrap" id="chipArea">
-    <!--
-       <div class="chip-container"> 
-        <div> abcd </div> 
-        <div class="chip-container-x">✘</div> 
-      </div> 
-      <div class="chip-container"> 
-        <div> abcd </div> 
-        <div class="chip-container-x">✘</div> 
-      </div> 
-    -->
-    </div>
 
 
-  
+    <ul class="chip-list">
+    </ul>
+
+
+    <script type="template-chip-container" id="chip">
+      <li>
+        <div class="chip-container"> 
+          <span>{{keywords}}</span> 
+          <div class="chip-container-x">✘</div> 
+        </div> 
+      </li>
+    </script>
+    <script type="module" src="./popup.js"></script>
+
+
   </body>
 </html>
 
