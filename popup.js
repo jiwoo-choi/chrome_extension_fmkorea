@@ -6,7 +6,7 @@ function broadcastUpdateMessage() {
 	});
 }
 
-function findKeyword(target) {
+function getKeywordFromAction(target) {
 	if(target.tagName === "LI") {
 		return;
 	} else if(target.className === "chip-container") {
@@ -20,12 +20,17 @@ function findKeyword(target) {
 
 function updateChip(keywordList) {
 	const chipUl = document.querySelector(".chip-list");
-    const templateChip = document.getElementById("chip").innerHTML;
+	const chipTemplate = document.querySelector('#chip-template');
 
-    chipUl.innerHTML = keywordList.reduce((prev, keyword) => {
-    	prev += templateChip.replace("{{keyword}}", keyword);
-    	return prev;
-    }, "");	
+	chipUl.innerHTML = ""
+
+	keywordList.forEach(element => {
+		let clone = document.importNode(chipTemplate.content, true);
+		const span = clone.querySelectorAll("SPAN");
+		span[0].textContent = element;
+		chipUl.appendChild(clone);
+	});
+	
 }
 
 async function viewDidLoad(){
@@ -33,31 +38,44 @@ async function viewDidLoad(){
 	const sendButton = document.querySelector(".button-element");
 	const input = document.querySelector("#textArea");
 	const chipUl = document.querySelector(".chip-list");
-	let savedKeyword = await storageController.getKeywordList();
 
+	let savedKeyword;
+	try {
+		savedKeyword = await storageController.getKeywordList();
+	} catch (e) { 
+		alert(e);
+		return;
+	}
+	
 	updateChip(savedKeyword);
 
 	chipUl.addEventListener("click", async function(event) {
 		const target = event.target;
-		let keyword = findKeyword(target);
+		let keyword = getKeywordFromAction(target);
 		if(keyword == null) return;
+		try {
+			await storageController.removeKeyword(keyword);
+			savedKeyword = await storageController.getKeywordList();
+			updateChip(savedKeyword);
+			broadcastUpdateMessage();
+		} catch (e) {
+			alert(e);
+		}
 
-		await storageController.removeKeyword(keyword);
-		savedKeyword = await storageController.getKeywordList();
-		updateChip(savedKeyword);
-		broadcastUpdateMessage();
-	});
+ 	});
 
 	sendButton.addEventListener("click", async function() {
-		await storageController.saveKeywordFor(input.value)
-		savedKeyword = await storageController.getKeywordList();
-		updateChip(savedKeyword);
-		broadcastUpdateMessage() ;
-		input.value = "";
-	})
+		try {
+			await storageController.saveKeywordFor(input.value)
+			savedKeyword = await storageController.getKeywordList();
+			updateChip(savedKeyword);
+			broadcastUpdateMessage();
+			input.value = "";
+		} catch (e) {
+			alert(e)
+		}		
+	});
 }
-
-
 
 document.addEventListener("DOMContentLoaded", function() {
 	viewDidLoad();

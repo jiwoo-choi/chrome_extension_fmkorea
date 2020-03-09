@@ -1,11 +1,10 @@
 const ERROR  = {
-    SUCCESS     : 'SUCCESS',
-    INPUT_NULL : 'INPUT NULL',
-    STORAGE_FAIL: 'STORAGE FAIL',
-    OUTOF_INDEX : 'OUTOF_INDEX'
+    SUCCESS         : 'SUCCESS',
+    INPUT_NULL      : 'INPUT NULL',
+    STORAGE_FAIL    : 'STORAGE FAIL',
+    OUTOF_INDEX     : 'OUTOF_INDEX',
+    DUPLICATE_KEY   : 'DUPLICATE_KEY'
 };
-
-
 
 export default class StorageController {
 
@@ -26,10 +25,10 @@ export default class StorageController {
                 let currentKeywords;
                 currentKeywords = result.keyword;
                 currentKeywords = (currentKeywords == undefined) ? [] : currentKeywords; // avoid null.
-                if (!this.storageErrorChecker()){
-                    resolve(currentKeywords) 
+                if (!this.storageErrorChecker()) {
+                    resolve(currentKeywords);
                 } else {
-                    reject(ERROR.STORAGE_FAIL)
+                    reject(ERROR.STORAGE_FAIL);
                 }
             }.bind(this));
         }.bind(this));
@@ -40,30 +39,16 @@ export default class StorageController {
             if (key == "") {
                 reject(ERROR.INPPUT_NULL);
             } else {
+
                 let currentKeywords = await this.getKeywordList();
-                currentKeywords.push(key);
+                if (currentKeywords.indexOf(key) == -1) {
+                    currentKeywords.push(key);
+                } else {
+                    reject(ERROR.DUPLICATE_KEY);
+                }
+
                 let tempDictionary = {};
                 tempDictionary[this.keyword] = currentKeywords;
-                chrome.storage.sync.set(tempDictionary, function() { 
-                    if (!this.storageErrorChecker()) {
-                        resolve(ERROR.SUCCESS);
-                    } else {
-                        reject(ERROR.STORAGE_FAIL);
-                    }
-                }.bind(this))
-            }
-        }.bind(this))
-    }
-
-    async removeKeywordAt(index){
-        return new Promise(async function(resolve, reject) {
-            let currentKeywords = await this.getKeywordList();
-            if (currentKeywords.length < index) {
-                reject(OUTOF_INDEX);
-            } else {
-                let tempDictionary = {};
-                currentKeywords.splice(index,1);
-                tempDictionary[this.keyword] = currentKeywords
                 chrome.storage.sync.set(tempDictionary, function() { 
                     if (!this.storageErrorChecker()) {
                         resolve(ERROR.SUCCESS);
@@ -79,15 +64,13 @@ export default class StorageController {
         return new Promise(async function(resolve, reject) {
             let currentKeywords = await this.getKeywordList();
             const removeItemIndex = currentKeywords.indexOf(keyword);
-            console.log(currentKeywords);
 
-            if(removeItemIndex > -1) {
+            if (keyword) {
                 currentKeywords.splice(removeItemIndex, 1);
             } else {
                 reject(ERROR.INPUT_NULL);
             }
 
-            // chrome storage sync set 함수를 분리해야할듯
             let tempDictionary = {};
             tempDictionary[this.keyword] = currentKeywords;
             chrome.storage.sync.set(tempDictionary, function() {
