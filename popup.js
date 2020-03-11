@@ -33,47 +33,54 @@ function updateChip(keywordList) {
 	
 }
 
+
+
 async function viewDidLoad(){
 	const storageController = new StorageController("keyword");
 	const sendButton = document.querySelector(".button-element");
 	const input = document.querySelector("#textArea");
 	const chipUl = document.querySelector(".chip-list");
 
-	let savedKeyword;
-	try {
-		savedKeyword = await storageController.getKeywordList();
-	} catch (e) { 
-		alert(e);
-		return;
-	}
+	const result = await storageController.getKeywordList();
+	updateChip(result);
 	
-	updateChip(savedKeyword);
+	storageController.subscribe((event)=> {
+		switch(event.status) {
+			case "SUCCESS":
+				updateChip(event.data);
+				broadcastUpdateMessage();
+				break;
+			case "FAILRUE":
+				alert(event.message);
+				break;
+		}
+	})
+
+
+	// Note
+	//addsomething 
+	//add and call render();
+	//rxswift
+	//flux pattern.
+	//observer => calling them -> reducer.
+	//observer => calling storageController.subscribe(this)
+	//and this will call everytime. function을 매번부른다.
+	//if add some variables => and this updated something.
+
+	//data updated.. and how?
+
+
 
 	chipUl.addEventListener("click", async function(event) {
 		const target = event.target;
 		let keyword = getKeywordFromAction(target);
 		if(keyword == null) return;
-		try {
-			await storageController.removeKeyword(keyword);
-			savedKeyword = await storageController.getKeywordList();
-			updateChip(savedKeyword);
-			broadcastUpdateMessage();
-		} catch (e) {
-			alert(e);
-		}
-
+		await storageController.removeKeyword(keyword);
  	});
 
 	sendButton.addEventListener("click", async function() {
-		try {
-			await storageController.saveKeywordFor(input.value)
-			savedKeyword = await storageController.getKeywordList();
-			updateChip(savedKeyword);
-			broadcastUpdateMessage();
-			input.value = "";
-		} catch (e) {
-			alert(e)
-		}		
+		await storageController.saveKeywordFor(input.value)
+		input.value = "";
 	});
 }
 
