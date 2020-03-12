@@ -6,33 +6,11 @@ const ERROR  = {
     UNKONWN_ERROR   : 'UNKONWN_ERROR'
 };
 
-//enum RESULT<T, E:Error>
-//case SUCCESS(T)
-//case FAILRUE(E)
-const RESULT = {
-    SUCCESS : function(data) {
-       return {"status": "SUCCESS", data: data}
-    },
-    FAILURE : function(error) {
-        return {"status": "FAILURE", error: error}
-    },
-}
-
-// resolve(RESULT.SUCCESS(data))
-// resolve(RESULT.FAILURE(error))
-/* 
-const result = fetch(..)
-switch(result.stauts) {
-    case "SUCCESS": //success(let data)
-        result.data
-    case "FAILRUE": //.failure(let error)
-        result.error )
-}*/
-
 export default class StorageController {
-
+    
     constructor(keyword) {
         this.keyword = keyword;
+
         this.isStorageError = () => {
             if (chrome.runtime.lastError) {
                 return true;
@@ -41,16 +19,46 @@ export default class StorageController {
             }
         }
         this.payloads = [];
+
+        //메인으로부터 업데이트 콜을 받기위해 모듈이 불릴떄부터 실행해둡니다.
+        chrome.runtime.onMessage.addListener(
+            async function(request, sender, sendResponse) {
+                if (request.id == "update") {
+                    this.update(request.eventlog);
+                }
+            }.bind(this)
+        )
     }
 
-    subscribe(callback){
+    //실제 변경이 일어났을 경우에만 commit을 합니다.
+    //에러까지 커밋을 해서 모두에게 뷰 업데이트사항을 알릴필요는 없습니다.
+    //실패한 사항은 각 뷰나 js에서 대응을 해야합니다.
+    //따라서 성공한 케이스에 대해서만 커밋을 날립니다. 
+    //커밋하고 바로 dispatch를 해야하는가? 아니면 update가 올떄까지 기다려야하는가? (timing issue & promise & generator)
+    commit(data) {
+        alert("commit start")
+        chrome.runtime.sendMessage({id:"commit" , eventlog: {"data": data, "status":  "SUCCESS"}})
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, {id:"commit" , eventlog: {"data": data, "status":  "SUCCESS"}});
+        });
+        //contentscript -> generaljs : chrome.runtime.sendMessage
+        //generaljs -> contentscript : chrome.tabs.query
+    }
 
-        if (typeof callback != 'function'){
+    //누군가가 커밋을 날려서 메인센터에서는 업데이트를 하라고 연락이 옵니다.
+    //그럴때 업데이트를 해줍니다.
+    update(eventlog){
+        this.dispatch(eventlog);
+    }
+    /* 2-phase commit?
+    vote(){
+    }*/
+
+    subscribe(callback){
+        if (typeof callback != 'function') {
             return false;
         }
-        
         this.payloads.push(callback);
-
     }
 
     unsubscribe(){
@@ -66,21 +74,6 @@ export default class StorageController {
     dispatchWithEvent(data, status, message="") {
         return this.dispatch({"data": data, "status": status ? "SUCCESS" : "FAILRUE", message:message})
     }
-
-    
-    // async programming?
-    // *eventGenerator(){
-    //     yield abc;
-    // }
-    //https://medium.com/@muhammad_hamada/simple-event-dispatcher-implementation-using-javascript-36d0eadf5a11
-    //https://exploringjs.com/impatient-js/ch_sync-generators.html
-    //https://velog.io/@rohkorea86/Generator-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%ED%95%B4%ED%95%B4%EB%B3%B4%EC%9E%90-%EC%9D%B4%EB%A1%A0%ED%8E%B8-%EC%99%9C-%EC%A0%9C%EB%84%A4%EB%A0%88%EC%9D%B4%ED%84%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%8D%A8%EC%95%BC-%ED%95%98%EB%8A%94%EA%B0%80
-    // queue process 1 : excute -> and wait -> til 
-    // queue process 2 : excute -> and wait .. ?
-    // queue process 3 : promise() promise() promise()
-    // queue process 4 : or single thread.. excuting.
-    //https://ui.toast.com/weekly-pick/ko_20150904/
-    //https://9105lgm.tistory.com/150
 
     async getKeywordList() {
         return new Promise(function(resolve, reject) {
@@ -102,28 +95,76 @@ export default class StorageController {
     }
 
     async saveKeywordFor(key) {
+        let currentKeywords = await this.getKeywordList();
 
         if (!key) {
+            //this.commit();
             this.dispatchWithEvent(currentKeywords,false, ERROR.INPPUT_NULL);
         } else {
-            let currentKeywords = await this.getKeywordList();
             if (currentKeywords.indexOf(key) == -1) {
                 currentKeywords.push(key);
                 let tempDictionary = {};
                 tempDictionary[this.keyword] = currentKeywords;
                 chrome.storage.sync.set(tempDictionary, function() { 
                     if (!this.isStorageError()) {
-                        this.dispatchWithEvent(currentKeywords,true);
+                        this.commit(currentKeywords);
+                        //this.dispatchWithEvent(currentKeywords,true);
                     } else {
+                        //this.commit(currentKeywords,false,ERROR.STORAGE_FAIL);
                         this.dispatchWithEvent(currentKeywords,false,ERROR.STORAGE_FAIL);
                     }
                 }.bind(this));
             } else {
+                //this.commit(currentKeywords,false, ERROR.DUPLICATE_KEY);
                 this.dispatchWithEvent(currentKeywords,false, ERROR.DUPLICATE_KEY);
             }
         }
+    }
 
-        /*
+    async removeKeyword(keyword) {
+
+        let currentKeywords = await this.getKeywordList();
+        const removeItemIndex = currentKeywords.indexOf(keyword);
+        if (removeItemIndex > -1) {
+            currentKeywords.splice(removeItemIndex, 1);
+            let tempDictionary = {}
+            tempDictionary[this.keyword] = currentKeywords;
+            chrome.storage.sync.set(tempDictionary, function() {
+                if (!this.isStorageError()) {
+                    this.commit(currentKeywords);
+
+                    //this.dispatchWithEvent(currentKeywords,true);
+                } else {
+                    this.dispatchWithEvent(currentKeywords,false, STORAGE_FAIL);
+                }
+            }.bind(this));
+        } else {
+            this.dispatchWithEvent(currentKeywords,false, INPUT_TYPE_ERROR);
+        }       
+    }
+}
+
+
+//https://developer.chrome.com/extensions/runtime#method-connectNative
+//pack download. // native apps.
+
+    
+    // async programming?
+    // *eventGenerator(){
+    //     yield abc;
+    // }
+    //https://medium.com/@muhammad_hamada/simple-event-dispatcher-implementation-using-javascript-36d0eadf5a11
+    //https://exploringjs.com/impatient-js/ch_sync-generators.html
+    //https://velog.io/@rohkorea86/Generator-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%B4%ED%95%B4%ED%95%B4%EB%B3%B4%EC%9E%90-%EC%9D%B4%EB%A1%A0%ED%8E%B8-%EC%99%9C-%EC%A0%9C%EB%84%A4%EB%A0%88%EC%9D%B4%ED%84%B0-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%8D%A8%EC%95%BC-%ED%95%98%EB%8A%94%EA%B0%80
+    // queue process 1 : excute -> and wait -> til 
+    // queue process 2 : excute -> and wait .. ?
+    // queue process 3 : promise() promise() promise()
+    // queue process 4 : or single thread.. excuting.
+    //https://ui.toast.com/weekly-pick/ko_20150904/
+    //https://9105lgm.tistory.com/150
+
+
+  /*
         return new Promise(async function(resolve, reject) {
             try {
                 if (!key) {
@@ -152,30 +193,8 @@ export default class StorageController {
             }
         }.bind(this));
         */
-    }
 
-    async removeKeyword(keyword) {
-
-        let currentKeywords = await this.getKeywordList();
-        const removeItemIndex = currentKeywords.indexOf(keyword);
-        if (removeItemIndex > -1) {
-            currentKeywords.splice(removeItemIndex, 1);
-            let tempDictionary = {}
-            tempDictionary[this.keyword] = currentKeywords;
-            chrome.storage.sync.set(tempDictionary, function() {
-                if (!this.isStorageError()) {
-                    this.dispatchWithEvent(currentKeywords,true);
-                } else {
-                    this.dispatchWithEvent(currentKeywords,false, STORAGE_FAIL);
-                }
-            }.bind(this));
-        } else {
-            this.dispatchWithEvent(currentKeywords,false, INPUT_TYPE_ERROR);
-        }
-       
-
-
-        /*
+         /*
         return new Promise(async function(resolve, reject) {
             try {
                 let currentKeywords = await this.getKeywordList();
@@ -199,5 +218,9 @@ export default class StorageController {
             }
         }.bind(this));;
         */
-    }
-}
+	//데코레이터, 델리게이트, 프록시, 팩토리, 싱글톤.
+
+
+	//delegate pattern for singleton pattern?
+	//singleton(delegate)
+	//delegate().subscribe();

@@ -1,10 +1,12 @@
 import StorageController from './StorageController.js';
 
+/*
 function broadcastUpdateMessage() {
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 		 chrome.tabs.sendMessage(tabs[0].id, {text: ""});
 	});
-}
+}*/
+//https://nillk.tistory.com/27
 
 function getKeywordFromAction(target) {
 	if(target.tagName === "LI") {
@@ -36,10 +38,19 @@ function updateChip(keywordList) {
 
 
 async function viewDidLoad(){
+
+	/*
+	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+		chrome.tabs.sendMessage(tabs[0].id, {"message":StorageController.method1()});
+   });*/
+
+
+
 	const storageController = new StorageController("keyword");
 	const sendButton = document.querySelector(".button-element");
 	const input = document.querySelector("#textArea");
 	const chipUl = document.querySelector(".chip-list");
+
 
 	const result = await storageController.getKeywordList();
 	updateChip(result);
@@ -48,9 +59,10 @@ async function viewDidLoad(){
 		switch(event.status) {
 			case "SUCCESS":
 				updateChip(event.data);
-				broadcastUpdateMessage();
+				//broadcastUpdateMessage();
 				break;
 			case "FAILRUE":
+				alert(event.status);
 				alert(event.message);
 				break;
 		}
@@ -69,8 +81,6 @@ async function viewDidLoad(){
 
 	//data updated.. and how?
 
-
-
 	chipUl.addEventListener("click", async function(event) {
 		const target = event.target;
 		let keyword = getKeywordFromAction(target);
@@ -87,3 +97,9 @@ async function viewDidLoad(){
 document.addEventListener("DOMContentLoaded", function() {
 	viewDidLoad();
 });
+
+
+//https://www.google.com/search?q=dispoasbag%EC%9B%90%EB%A6%AC&oq=dispoasbag%EC%9B%90%EB%A6%AC&aqs=chrome..69i57j0l7.3378j0j7&sourceid=chrome&ie=UTF-8
+//diff algorithm.
+//https://magi82.github.io/ios-rxswift-03/
+//https://rhammer.tistory.com/286
