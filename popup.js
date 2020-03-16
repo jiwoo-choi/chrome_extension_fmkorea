@@ -1,4 +1,8 @@
-import StorageController from './StorageController.js';
+//import StorageController from './StorageController.js';
+
+import { createStore } from './Redux/redux.js';
+import { reducer } from './Redux/reducer.js';
+import {  chromeAddKeywords, chromeRemoveKeywords, chromeFetchKeywords } from './Redux/actions.js';
 
 function broadcastUpdateMessage() {
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -30,11 +34,74 @@ function updateChip(keywordList) {
 		span[0].textContent = element;
 		chipUl.appendChild(clone);
 	});
-	
 }
+
+
+const sendButton = document.querySelector(".button-element");
+const input = document.querySelector("#textArea");
+const chipUl = document.querySelector(".chip-list");
+
+sendButton.addEventListener("click", function() {
+	store.dispatch(chromeAddKeywords(input.value));
+	input.value = "";
+});
+
+
+chipUl.addEventListener("click", async function(event) {
+	const target = event.target;
+	let keyword = getKeywordFromAction(target);
+	if(keyword == null) return;
+	store.dispatch(chromeRemoveKeywords(keyword));
+ });
+
+
+function viewDidLoad(){ 
+	store.dispatch(chromeFetchKeywords());
+}
+
+function render() {
+	const state = store.getState();
+	if (state.error) {
+		alert(state.errorMessage);
+	} else {
+		updateChip(state.items)
+	}
+	//updateChip(state.items);
+}
+
+
+
+
+var store = createStore(reducer);
+store.subscribe(render);
+
+document.addEventListener("DOMContentLoaded", function() {
+	viewDidLoad();
+});
+
+
+
+
+
+/*
 
 async function viewDidLoad(){
 	const storageController = new StorageController("keyword");
+,	const storageViewModel = new StorageViewModel();
+
+	//whenButtonTapped {
+	// storageViewModel.removeButtonTapped();
+	//}
+	//when removebutton Tapped{
+	//	storagebuttonclicked.saveButtonTaped();
+	//}
+	// storageViewModel.updatedKeywords().then(rseult => abc)
+	// this. calls omething!! OMG.
+
+
+
+
+
 	const sendButton = document.querySelector(".button-element");
 	const input = document.querySelector("#textArea");
 	const chipUl = document.querySelector(".chip-list");
@@ -80,3 +147,4 @@ async function viewDidLoad(){
 document.addEventListener("DOMContentLoaded", function() {
 	viewDidLoad();
 });
+*/

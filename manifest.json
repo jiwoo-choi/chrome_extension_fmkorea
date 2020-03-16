@@ -20,13 +20,17 @@
     ], 
 
     "background" : {
-        "scripts": ["background.js"],
+        "page" : "background.js",
         "persistent": false
     },
     
     "web_accessible_resources": [
         "contentMain.js",
-        "StorageController.js"
+        "StorageController.js",
+        "./Redux/actions.js",
+        "./Redux/redux.js",
+        "./Redux/actionType.js",
+        "./Redux/reducer.js"
     ],
     "manifest_version":2
 }

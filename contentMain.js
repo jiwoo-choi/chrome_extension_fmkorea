@@ -1,5 +1,7 @@
 import StorageController from './StorageController.js';
 
+
+
 function removeTitles(keywordList) {
 	const titleTag = document.querySelectorAll("h3.title");
 
@@ -16,6 +18,8 @@ function removeTitles(keywordList) {
 
 export function contentMain() { 
 	const storageController =  new StorageController("keyword");
+	const viewModel = new StorageViewModel();
+
 	function filterTitle() {
 		storageController.getKeywordList()
 			.then(keywordList => { 
@@ -23,6 +27,11 @@ export function contentMain() {
 			});
 	}
 	filterTitle();
+	
+
+	viewModel.emit(this.filterTitle());
+	//thisfilterTitle.
+
 		
 	chrome.runtime.onMessage.addListener(
 		async function(request, sender, sendResponse) {
