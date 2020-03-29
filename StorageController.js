@@ -1,9 +1,7 @@
 const ERROR  = {
-    SUCCESS         : 'SUCCESS',
-    INPUT_NULL      : 'INPUT NULL',
-    STORAGE_FAIL    : 'STORAGE FAIL',
-    OUTOF_INDEX     : 'OUTOF_INDEX',
-    DUPLICATE_KEY   : 'DUPLICATE_KEY'
+    SUCCESS     : 'SUCCESS',
+    INPPUT_NULL : 'INPUT NULL',
+    STORAGE_FAIL: 'STORAGE FAIL',
 };
 
 export default class StorageController {
@@ -25,29 +23,22 @@ export default class StorageController {
                 let currentKeywords;
                 currentKeywords = result.keyword;
                 currentKeywords = (currentKeywords == undefined) ? [] : currentKeywords; // avoid null.
-                if (!this.storageErrorChecker()) {
-                    resolve(currentKeywords);
+                if (!this.storageErrorChecker()){
+                    resolve(currentKeywords) 
                 } else {
-                    reject(ERROR.STORAGE_FAIL);
+                    reject(ERROR.STORAGE_FAIL)
                 }
             }.bind(this));
-        }.bind(this));
+        }.bind(this))
     }
 
-    async saveKeywordFor(key) {
+    async saveKeyword(key) {
         return new Promise(async function(resolve, reject) {
             if (key == "") {
                 reject(ERROR.INPPUT_NULL);
             } else {
-
                 let currentKeywords = await this.getKeywordList();
-                if (currentKeywords.indexOf(key) == -1) {
-                    currentKeywords.push(key);
-                } else {
-                    reject(ERROR.DUPLICATE_KEY);
-                }
-
-                let tempDictionary = {};
+                currentKeywords.push(key);
                 tempDictionary[this.keyword] = currentKeywords;
                 chrome.storage.sync.set(tempDictionary, function() { 
                     if (!this.storageErrorChecker()) {
@@ -55,31 +46,8 @@ export default class StorageController {
                     } else {
                         reject(ERROR.STORAGE_FAIL);
                     }
-                }.bind(this));
+                }.bind(this))
             }
-        }.bind(this));
-    }
-
-    async removeKeyword(keyword) {
-        return new Promise(async function(resolve, reject) {
-            let currentKeywords = await this.getKeywordList();
-            const removeItemIndex = currentKeywords.indexOf(keyword);
-
-            if (keyword) {
-                currentKeywords.splice(removeItemIndex, 1);
-            } else {
-                reject(ERROR.INPUT_NULL);
-            }
-
-            let tempDictionary = {};
-            tempDictionary[this.keyword] = currentKeywords;
-            chrome.storage.sync.set(tempDictionary, function() {
-                if (!this.storageErrorChecker()) {
-                    resolve(ERROR.SUCCESS);
-                } else {
-                    reject(ERROR.STORAGE_FAIL);
-                }
-            }.bind(this));
-        }.bind(this));;
+        }.bind(this))
     }
 }
