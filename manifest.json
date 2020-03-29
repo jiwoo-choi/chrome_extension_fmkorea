@@ -1,6 +1,6 @@
 {
     "name": "fmkorea-filter",
-    "version": "0.5",
+    "version": "0.6",
     "permissions": [
         "tabs",
         "<all_urls>",
@@ -14,13 +14,23 @@
             "matches": [
                 "https://www.fmkorea.com/*"
             ],
-            "js": ["Content.js"], 
+            "js": ["content.js"], 
             "run_at": "document_end"       
         }
     ], 
+
+    "background" : {
+        "page" : "background.js",
+        "persistent": false
+    },
+    
     "web_accessible_resources": [
-        "ContentMain.js",
-        "StorageController.js"
+        "contentMain.js",
+        "StorageController.js",
+        "./Redux/actions.js",
+        "./Redux/redux.js",
+        "./Redux/actionType.js",
+        "./Redux/reducer.js"
     ],
     "manifest_version":2
 }

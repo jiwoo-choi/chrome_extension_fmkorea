@@ -1,80 +1,122 @@
 
-.md-chip {
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800');
+
+* {
+  font-family : 'Nanum Gothic';
+}
+
+.big-text-header {
+  text-align : center;
+  font-size: 50px;
+  padding-top: 10px;
+  color:white;
+}
+
+.searchbar-container {
+  height:45px;
+  display:flex;
+  margin-left:25px;
+  margin-right:25px;
+  margin-bottom:20px;
+}
+
+.searchbar-element{
+  color:black;
+  align-items: stretch;
+  justify-content: stretch;
+  border-radius:10px; 
+  flex:0.8;
+  margin-right: 10px;
+  border: 0px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: large;
+}
+
+.button-element{
+  border-radius: 2px;
+  background-color: black;
+  color: #e0e0e0;
+  font-size: 20px;
+  border-radius:10px; 
+  flex:0.2;
+  border: 0px;
+  align-items: stretch;
+
+}
+
+
+.container {
+  display:flex;
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-bottom: 30px;
+  background-color:green;
+}
+
+.container.header{
+  justify-content: center;
+}
+
+.flex-container {
+  display:flex;
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-bottom: 30px;
+}
+
+.wrap { 
+  flex-wrap: wrap;
+}
+
+.chip-container {
   display: inline-block;
-  background: #e0e0e0;
-  padding: 0 12px;
-  border-radius: 32px;
-  font-size: 13px;
+  background-color: white;
+  padding: 10px;
   margin-right: 10px;
   margin-bottom: 10px;
-  margin-top: 10px;
+  border-radius: 20px;
 }
 
-.md-chip-clickable {
-  cursor: pointer;
+.chip-container > span {
+  margin: 4px;
 }
 
-.md-chip, .md-chip-icon {
-  height: 32px;
-  line-height: 32px;
+.chip-container-x{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius:10px;
+  background-color: #C0C0C0;
+  width:20px;
+  height:20px;
+  color:white;
+  font-size: 10px;
 }
 
-.md-chip-icon {
-  display: block;
-  float: left;
-  background: #009587;
-  width: 32px;
-  border-radius: 50%;
-  text-align: center;
-  color: white;
-  margin: 0 8px 0 -12px;
+.chip-container:hover {
+  background-color: #808080;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
 
-.md-chip-remove {
+.chip-container-x:hover{
+  background-color: #D3D3D3	;
+}
+
+ul {
+  list-style: none;
+  padding-inline-start: 0px;
+  margin-left: 30px;
+}
+
+li {
   display: inline-block;
-  background: #aaa;
-  border: 0;
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  padding: 0;
-  margin: 0 -4px 0 4px;
-  cursor: pointer;
-  font: inherit;
-  line-height: 20px;
-}
-.md-chip-remove:after {
-  color: #e0e0e0;
-  content: 'x';
-}
-.md-chip-remove:hover {
-  background: #999;
-}
-.md-chip-remove:active {
-  background: #777;
-}
-
-.md-chips {
-  padding: 12px 0;
-}
-.md-chips .md-chip {
-  margin: 0 5px 3px 0;
-}
-
-.md-chip-raised {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-}
-
-*, *:before, *:after {
-  box-sizing: border-box;
 }
 
 body{
   width:500px;
+  background-color: #3262c5;
 }
 
-.button12 {
-  border-radius: 2px;
-  background-color: #4CAF50
-}
 
